@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "Sistemi.h"
 #include "Map.h"
+#include "StartMenu.h"
 #include <iostream>
 #include <string>
 #include <conio.h>
@@ -12,18 +13,22 @@
 int _tmain(int argc, _TCHAR* argv[])
  {
 	 Map MioMappa;
-	char tasto = ' ';
-	Posizione Player = {2, 2};
-
-	MapRedering(MioMappa,Player);
-    while (tasto != 'q') {
-        tasto = _getch(); // Aspetta un tasto
-	
-	muoviEntita(Player, tasto);
-	MapRedering(MioMappa,Player);
-
-    }
-
+	 StartMenu Menu;
+	 char tasto = ' ';
+	 Posizione Player = {2, 2};
+	 bool GameInExecution = true;
+	 while(GameInExecution){
+		 if(Menu.GetAttivo()){
+			 Menu.Input();
+			 Menu.MenuGraphic();
+		 }else{
+			MapRedering(MioMappa,Player);
+			tasto = _getch();
+			muoviEntita(Player, tasto);
+			MapRedering(MioMappa,Player);	
+	}
+}
+ 
     return 0;
 }
 

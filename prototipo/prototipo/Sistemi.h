@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "Map.h"
 
-void muoviEntita(Posizione& p, char Tasto);
+void muoviEntita(Map& m,Posizione& p, char Tasto);
 void MapRedering(Map& m, Posizione& p);
 
 

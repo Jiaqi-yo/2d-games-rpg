@@ -18,7 +18,7 @@ void StartMenu::Input(){
 	}
 	else if(TastoMaiuscolo == 's'){
 	OpzioneSelezionata = 0;
-	}
+	}			 
 	else if(Tasto == 13){
 		if(OpzioneSelezionata == 1){
 		Attivo = false;

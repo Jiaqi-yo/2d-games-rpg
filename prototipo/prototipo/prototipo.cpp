@@ -24,11 +24,15 @@ int _tmain(int argc, _TCHAR* argv[])
 		 }else{
 			MapRedering(MioMappa,Player);
 			tasto = _getch();
-			muoviEntita(Player, tasto);
-			MapRedering(MioMappa,Player);	
+
+			if(tasto == 27){
+				Menu.SetAttivo(true);
+			}else{
+			muoviEntita(MioMappa,Player, tasto);
+			MapRedering(MioMappa,Player);
+			}
 	}
 }
- 
     return 0;
 }
 

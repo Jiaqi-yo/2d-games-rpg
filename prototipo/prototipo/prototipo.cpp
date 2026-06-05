@@ -19,8 +19,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	 bool GameInExecution = true;
 	 while(GameInExecution){
 		 if(Menu.GetAttivo()){
-			 Menu.Input();
 			 Menu.MenuGraphic();
+			 Menu.Input();
 		 }else{
 			MapRedering(MioMappa,Player);
 			tasto = _getch();

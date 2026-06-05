@@ -5,7 +5,7 @@
 #include <cctype>
 
 StartMenu::StartMenu(){
- OpzioneSelezionata = 0;
+ OpzioneSelezionata = 1;
  Attivo = true;
 }
 
@@ -29,10 +29,10 @@ void StartMenu::Input(){
 }
 
 void StartMenu::MenuGraphic(){
-	
 	if(!Attivo){
 	return;
 	}
+
 	system("cls");
 	if(OpzioneSelezionata == 1){
 		std::cout << ">Play" << std::endl;

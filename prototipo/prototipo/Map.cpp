@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "iostream"
 #include "Map.h"
 
 Map::Map(){
@@ -23,10 +22,6 @@ Map::Map(){
 	}
 }
 
-int Map::GetCella(int x,int y){
-
-	if(x>=0 && x < 10 && y >= 0 && x < 10){
-	Griglia[y][x];
-	}
-	return 1;
+int Map::GetCella(int r, int c){
+	return Griglia[r][c];
 }

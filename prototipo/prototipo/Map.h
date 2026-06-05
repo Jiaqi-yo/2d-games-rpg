@@ -6,7 +6,7 @@ private:
 	int Griglia[10][10];
 public:
 	Map();
-	int GetCella(int x,int y);
+	int GetCella(int r,int c);
 };
 
 #endif

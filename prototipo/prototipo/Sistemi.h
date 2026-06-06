@@ -1,14 +1,13 @@
 #include "stdafx.h"
-#ifndef SISTEMI_H
-#define SISTEMI_H
 #include "Component.h"
 #include "Map.h"
-
-void muoviEntita(Map& m,Posizione& p, char Tasto);
-void MapRedering(Map& m, Posizione& p);
-
-
+#include "EntityManager.h"
+#ifndef SISTEMI_H
+#define SISTEMI_H
 
 
+void MuoviEntita(Map& m,EntityManager& Entity,EntityID& ID,char Tasto);
+void MapRedering(Map& m, EntityManager& Entity,EntityID& ID);
+void GameInExecution(Map& m,EntityManager& Entity,EntityID& ID);
 
 #endif

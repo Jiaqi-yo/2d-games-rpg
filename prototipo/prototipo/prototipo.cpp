@@ -5,6 +5,9 @@
 #include "Sistemi.h"
 #include "Map.h"
 #include "StartMenu.h"
+#include "EntityManager.h"
+#include "Component.h"
+#include "GameInExecution.h"
 #include <iostream>
 #include <string>
 #include <conio.h>
@@ -12,27 +15,25 @@
 
 int _tmain(int argc, _TCHAR* argv[])
  {
+	 EntityManager Entity;
+	 EntityID Player = Entity.CreaID();
+	 Posizione p = {2, 2};
+	 Entity.Posizione[Player] = p; 
+	 Visuale v = {'@'};
+	 Entity.Visuale[Player] = v;
+
+
 	 Map MioMappa;
 	 StartMenu Menu;
-	 char tasto = ' ';
-	 Posizione Player = {2, 2};
-	 bool GameInExecution = true;
-	 while(GameInExecution){
-		 if(Menu.GetAttivo()){
+	 char Tasto = ' ';
+
+		 while(Menu.GetAttivo()){
 			 Menu.MenuGraphic();
 			 Menu.Input();
-		 }else{
-			MapRedering(MioMappa,Player);
-			tasto = _getch();
-
-			if(tasto == 27){
-				Menu.SetAttivo(true);
-			}else{
-			muoviEntita(MioMappa,Player, tasto);
-			MapRedering(MioMappa,Player);
-			}
+		 }
+		 if(Menu.GetChoice() == 1){
+		 GameInExecution(MioMappa,Entity,Player);
 	}
-}
-    return 0;
+	return 0;
 }
 

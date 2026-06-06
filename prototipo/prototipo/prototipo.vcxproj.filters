@@ -36,6 +36,9 @@
     <ClInclude Include="StartMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

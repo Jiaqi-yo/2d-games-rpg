@@ -10,11 +10,12 @@ private:
 	int NextID;
 
 public:
-	std::map<EntityID, Posizione> Posizione;
-	std::map<EntityID, Attacco> Attacco;
-	std::map<EntityID, Salute> Salute;
-	std::map<EntityID, Livello> Livello;
-	std::map<EntityID, Visuale> Visuale;
+	std::map<EntityID, Posizione> posizione;
+	std::map<EntityID, Attacco> attacco;
+	std::map<EntityID, Salute>salute;
+	std::map<EntityID, Livello> livello;
+	std::map<EntityID, Visuale> visuale;
+	std::map<EntityID, ATB> atb;
 	
 	EntityManager(){
 	NextID = 0;
@@ -25,11 +26,40 @@ public:
 	}
 
 	void EraseEntity(EntityID ID){
-	Posizione.erase(ID);
-	Attacco.erase(ID);
-	Salute.erase(ID);
-	Livello.erase(ID);
-	Visuale.erase(ID);
+	posizione.erase(ID);
+	attacco.erase(ID);
+	salute.erase(ID);
+	livello.erase(ID);
+	visuale.erase(ID);
+	atb.erase(ID);
+	}
+
+	EntityID CreateEntity(int x,int y, char simbolo,double att,double health,double bt, double tm){
+		EntityID NuovoID = CreaID();
+
+		Posizione pos;
+		pos.X = x;
+		pos.Y = y;
+		posizione[NuovoID] = pos;
+
+		Visuale vis;
+		vis.Simbolo = simbolo;
+		visuale[NuovoID] = vis;
+
+		Attacco damage;
+		damage.Damage = att;
+		attacco[NuovoID] = damage;
+
+		Salute sal;
+		sal.HP = health;
+		salute[NuovoID] = sal;
+
+		ATB time;
+		time.BarTime = bt;
+		time.Time = tm;
+		atb[NuovoID] = time;
+		
+		return NuovoID;
 	}
 };
 #endif

@@ -8,6 +8,10 @@
 
 void MuoviEntita(Map& m,EntityManager& Entity,EntityID& ID,char Tasto);
 void MapRedering(Map& m, EntityManager& Entity,EntityID& ID);
-void GameInExecution(Map& m,EntityManager& Entity,EntityID& ID);
+void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID);
+bool CollisionDetection(EntityManager& Entity, EntityID& ID);
+void CombatSystem(EntityManager& Entity, EntityID& ID);
+
+
 
 #endif

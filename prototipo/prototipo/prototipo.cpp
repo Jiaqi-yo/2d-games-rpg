@@ -15,24 +15,18 @@
 int _tmain(int argc, _TCHAR* argv[])
  {
 	 EntityManager Entity;
-	 EntityID Player = Entity.CreaID();
-	 Posizione p = {2, 2};
-	 Entity.Posizione[Player] = p; 
-	 Visuale v = {'@'};
-	 Entity.Visuale[Player] = v;
-
-
+	 EntityID PlayerID = Entity.CreateEntity(2,2, '@', 5, 10, 100, 0.5);
+	 EntityID SlimeID = Entity.CreateEntity(18,18,'&', 1, 5, 100, 1);
 	 Map MioMappa;
 	 StartMenu Menu;
-	 char Tasto = ' ';
 
 		 while(Menu.GetAttivo()){
 			 Menu.MenuGraphic();
 			 Menu.Input();
-		 }
-		 if(Menu.GetChoice() == 1){
-		 GameInExecution(MioMappa,Entity,Player);
+			 if(Menu.GetChoice() == 1 && Menu.GetAttivo() == false){
+		 GameInExecution(MioMappa,Entity,PlayerID);
 	}
+}
 	return 0;
 }
 

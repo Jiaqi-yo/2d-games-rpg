@@ -38,8 +38,6 @@ void MoveCursor(int x, int y){
 	coord.X = x;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
-
-
 void MapRedering(Map& m,EntityManager& Entity,EntityID& ID){
 	MoveCursor(0, 0);
 	for(int i = 0;i < 20; i++){
@@ -67,7 +65,6 @@ void MapRedering(Map& m,EntityManager& Entity,EntityID& ID){
 		std::cout << std::endl;
 	}
 }
-
 bool CollisionDetection(EntityManager& Entity, EntityID& ID){
 
 	Posizione posPlayer = Entity.posizione[ID];
@@ -84,18 +81,53 @@ bool CollisionDetection(EntityManager& Entity, EntityID& ID){
 
 void CombatSystem(EntityManager& Entity, EntityID& def, EntityID& att){
 
-	double Time = Entity.atb[def].Time;
-	double Bar = Entity.atb[def].BarTime;
-	
+	Entity.atb[def].Time++;
+	Entity.atb[def].BarTime;
+	Entity.atb[att].Time++;
+	Entity.atb[att].BarTime;
 
+	MoveCursor(0,1);
+	std::cout << Entity.atb[def].Time;
+	MoveCursor(0,2);
+	std::cout << Entity.atb[att].Time;
 
+	if(_kbhit()){
+	char Combat = _getch();
+	MoveCursor(5,10);
+	std::cout << "SCELTA" << std::endl;
+	MoveCursor(0,11);
+	std::cout << "1)ATTACCO" << std::endl;
+	MoveCursor(15,11);
+	std::cout << "2)FUGA" << std::endl;
+	if(Entity.atb[def].Time >= Entity.atb[def].BarTime && Combat == 1){
+		Entity.salute[att].HP -= Entity.attacco[def].Damage;	
+		MoveCursor(0,5);
+		std::cout << "il giocatore ha attaccato!				" << std::endl;
+		Entity.atb[def].Time -= 100;
+		if(Entity.salute[att].HP <= 0){
+			Entity.EraseEntity(att);
+			MoveCursor(0,5);
+			std::cout << "Hai Vinto!				" << std::endl;
+		}
+	}
+	if(Entity.atb[att].Time >= Entity.atb[att].BarTime){
+		Entity.salute[def].HP -= Entity.attacco[att].Damage;
+		MoveCursor(0,5);
+		std::cout << "il nemico ha attaccato!				" << std::endl;
+		Entity.atb[att].Time -= 100;
+		if(Entity.salute[def].HP <= 0){
+			Entity.EraseEntity(def);
+			MoveCursor(0,5);
+			std::cout << "hai perso....            " << std::endl;
+			}
+		}else if(Combat == 2){
+			MoveCursor(0,5);
+			std::cout << "Sei fuggito....				" << std::endl;
 
+		}
+	}
 }
-
-
-
-
-void GameInExecution(Map& m,EntityManager& Entity,EntityID& ID){
+void GameInExecution(Map& m,EntityManager& Entity,EntityID& ID,EntityID& att){
 	bool InExecution = true;
 	bool clean = false;
 	double BarTime = 0;
@@ -126,30 +158,7 @@ void GameInExecution(Map& m,EntityManager& Entity,EntityID& ID){
 		system("cls");
 		clean = true;
 		}
-		
-		BarTime += 0.1;
-		MoveCursor(0, 1);
-		
-		
-		
-
-	 if(BarTime < 100){
-		 MoveCursor(0,1);
-		 std::cout << "Combattimento! Caricamento:" << BarTime << "%   " << std::endl;
-	 }else{
-	 std::cout << "La Barra e piena " << BarTime << "%                 " << std::endl;		
-		if(_kbhit()){
-		char Combat = _getch();
-		if(Combat == 'q'){
-			MoveCursor(0,1);
-			std::cout << "Hai attaccato!                            " << std::endl;
-			Sleep(1000);
-			BarTime = 0;
-		}		
-	}
-}
-	
-
+		CombatSystem(Entity,ID,att);
 	}
 	Sleep(20);
 	}

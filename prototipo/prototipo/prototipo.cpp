@@ -15,16 +15,18 @@
 int _tmain(int argc, _TCHAR* argv[])
  {
 	 EntityManager Entity;
-	 EntityID PlayerID = Entity.CreateEntity(2,2, '@', 5, 10, 100, 0.5);
-	 EntityID SlimeID = Entity.CreateEntity(18,18,'&', 1, 5, 100, 1);
+	 EntityID PlayerID = Entity.CreateEntity(2,2, '@', 5, 100, 100, 0.5);
+	 EntityID SlimeID = Entity.CreateEntity(18,18,'&', 1, 15, 100, 1);
+	 EntityID GoblinID = Entity.CreateEntity(2,18,'£', 3, 10, 100, 0.5);
 	 Map MioMappa;
 	 StartMenu Menu;
 
 		 while(Menu.GetAttivo()){
 			 Menu.MenuGraphic();
 			 Menu.Input();
-			 if(Menu.GetChoice() == 1 && Menu.GetAttivo() == false){
-		 GameInExecution(MioMappa,Entity,PlayerID);
+			if(Menu.GetChoice() == 1 && Menu.GetAttivo() == false){
+			 GameInExecution(MioMappa,Entity,PlayerID,SlimeID);
+			 CombatSystem(Entity,PlayerID,SlimeID);
 	}
 }
 	return 0;

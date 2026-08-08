@@ -8,7 +8,7 @@ struct Attacco{double Damage;};
 struct Salute{double HP;};
 struct Livello{double Exp;};
 struct Visuale{char Simbolo;};
-struct ATB{double BarTime, Time;};
+struct ATB{int BarTime, Time;};
 
 
 

@@ -2,6 +2,8 @@
 #include <string>
 #include <map>
 #include "Component.h"
+#include "Windows.h"
+
 #ifndef ENTITYMANAGER_H
 #define ENTITYMANAGER_H
 class EntityManager{
@@ -34,7 +36,7 @@ public:
 	atb.erase(ID);
 	}
 
-	EntityID CreateEntity(int x,int y, char simbolo,double att,double health,double bt, double tm){
+	EntityID CreateEntity(int x,int y, char simbolo,double att,double health,int bt, int tm){
 		EntityID NuovoID = CreaID();
 
 		Posizione pos;

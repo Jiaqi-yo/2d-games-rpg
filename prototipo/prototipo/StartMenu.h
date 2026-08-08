@@ -5,6 +5,7 @@ class StartMenu{
 
 private:
 	int OpzioneSelezionata;
+	int OpzioneLose;
 	bool Attivo;
 
 public:
@@ -12,6 +13,11 @@ public:
 	StartMenu();
 	void Input();
 	void MenuGraphic();
+	void Credits();
+
+	void InputLose();
+	void MenuLose();
+
 	int GetChoice();
 	void SetAttivo(bool a);
 	bool GetAttivo();

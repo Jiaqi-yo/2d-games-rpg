@@ -109,15 +109,21 @@ MoveCursor(46, 25); std::cout << "| |___    /  \\    | |    | |  ";
 MoveCursor(46, 26); std::cout << "|_____|  /_/\\_\\  |___|   |_|  ";
 }
 
-void StartMenu::InputLose(){
+int StartMenu::InputLose(){
 	char Tasto = _getch();
-	char TastoMinuscolo = tolower(Tasto);
-	if(TastoMinuscolo == 'w'){
-	OpzioneLose = 1;
-	}
-	else if(TastoMinuscolo == 's'){
-	OpzioneLose = 0;			 
-	}
+    char TastoMinuscolo = tolower(Tasto);
+    
+    if (TastoMinuscolo == 'w') {
+        OpzioneLose = 1;
+    }
+    else if (TastoMinuscolo == 's') {
+        OpzioneLose = 0; 
+    }
+    else if (Tasto == 13) {
+        return OpzioneLose; 
+    }
+    
+    return -1;
 }
 
 void StartMenu::MenuLose(){
@@ -153,7 +159,6 @@ void StartMenu::Credits(){
 	std::cout << "Capo del Progetto" << std::endl;
 }
 
-
-/*
-aggiungere sezione per MenuLose e poi aggiungerlo nel sistema
-*/
+int StartMenu::GetLose(){
+return OpzioneLose;
+}

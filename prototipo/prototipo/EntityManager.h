@@ -18,6 +18,8 @@ public:
 	std::map<EntityID, Livello> livello;
 	std::map<EntityID, Visuale> visuale;
 	std::map<EntityID, ATB> atb;
+	std::map<EntityID, EntityRespawn> RespawnTImer;
+	std::map<EntityID, Skillset> skillset;
 	
 	EntityManager(){
 	NextID = 0;
@@ -34,9 +36,10 @@ public:
 	livello.erase(ID);
 	visuale.erase(ID);
 	atb.erase(ID);
+	skillset.erase(ID);
 	}
 
-	EntityID CreateEntity(int x,int y, char simbolo,double att,double health,int bt, int tm){
+	EntityID CreateEntity(int x,int y, char simbolo,double att,double health,double maxHP,int bt, int tm,int reY,int reX,int Timer,int exp,int liv,int maxexp){
 		EntityID NuovoID = CreaID();
 
 		Posizione pos;
@@ -54,14 +57,34 @@ public:
 
 		Salute sal;
 		sal.HP = health;
+		sal.MaxHP = maxHP;
 		salute[NuovoID] = sal;
 
 		ATB time;
 		time.BarTime = bt;
 		time.Time = tm;
 		atb[NuovoID] = time;
+
+		EntityRespawn RespawnTime;
+		
+		RespawnTime.ReX = reX;
+		RespawnTime.ReY = reY;
+		RespawnTime.timer = Timer;
+		RespawnTImer[NuovoID] = RespawnTime;
+
+		Livello lvl;
+		lvl.Exp = exp;
+		lvl.level = liv;
+		lvl.MaxExp = maxexp;
+		livello[NuovoID] = lvl;
 		
 		return NuovoID;
+	}
+	void AddSkill(EntityID id,std::string name,int danno){
+		Skill NewSkill;
+		NewSkill.Name = name;
+		NewSkill.Danno = danno;
+		skillset[id].skillset.push_back(NewSkill);
 	}
 };
 #endif

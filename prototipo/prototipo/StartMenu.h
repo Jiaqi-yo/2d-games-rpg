@@ -15,9 +15,10 @@ public:
 	void MenuGraphic();
 	void Credits();
 
-	void InputLose();
+	int InputLose();
 	void MenuLose();
 
+	int GetLose();
 	int GetChoice();
 	void SetAttivo(bool a);
 	bool GetAttivo();

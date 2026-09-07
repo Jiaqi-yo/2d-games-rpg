@@ -3,6 +3,8 @@
 #include <conio.h>
 #include "Sistemi.h"
 #include "StartMenu.h"
+#include "StatsGUI.h"
+#include "cstdlib"
 #include "Windows.h"
 
 const char* BLOCCO_PIENO = "\xE2\x96\x88";
@@ -173,6 +175,26 @@ void MobRespawn(EntityManager& Entity){
 	}
 }
 
+void LevelUp(EntityManager& Entity,EntityID PlayerID){
+	
+	if(Entity.livello[PlayerID].Exp >= Entity.livello[PlayerID].MaxExp){
+		Entity.livello[PlayerID].level += 1;
+		Entity.livello[PlayerID].Exp -= Entity.livello[PlayerID].MaxExp;
+		Entity.attacco[PlayerID].Damage++;
+		Entity.salute[PlayerID].MaxHP++;
+		Entity.salute[PlayerID].HP = Entity.salute[PlayerID].MaxHP;
+		Entity.livello[PlayerID].PointStats += 3;
+
+
+		double scala = (double)rand() / (double)RAND_MAX;
+		double mul = 1.8 + scala * (2.2 - 1.8);
+		system("cls");
+		std::cout << "SEI SALITO DI LIVELLO " << Entity.livello[PlayerID].level << std::endl;
+		Sleep(1500);
+		
+		Entity.livello[PlayerID].MaxExp = (int)(Entity.livello[PlayerID].MaxExp * mul);
+	}
+}
 
 void CombatSystem(EntityManager& Entity, EntityID PlayerID, EntityID EnemyID, bool& clean, int& GameState) {
 SetConsoleOutputCP(CP_UTF8);
@@ -258,7 +280,7 @@ SetConsoleOutputCP(CP_UTF8);
 			const auto& ListaMosse = Entity.skillset[PlayerID].skillset; 
             MoveCursor(0, 30);
             for (size_t i = 0; i < ListaMosse.size(); i++) {
-                std::cout << "[" << (i + 1) << "]" << ListaMosse[i].Name << " (" << ListaMosse[i].Danno << ") danni" << std::endl;
+				std::cout << "[" << (i + 1) << "]" << ListaMosse[i].Name << " (" << ListaMosse[i].Danno + Entity.attacco[PlayerID].Damage << ") danni" << std::endl;
             }
         }
         else if (inSceltaMosse && Combat >= '1' && Combat <= '4') {
@@ -268,13 +290,13 @@ SetConsoleOutputCP(CP_UTF8);
             if (IndiceMosse < ListaMosse.size()) {
                 Skill MossaScelta = ListaMosse[IndiceMosse];
                 
-                Entity.salute[EnemyID].HP -= MossaScelta.Danno;
+				Entity.salute[EnemyID].HP -= MossaScelta.Danno + Entity.attacco[PlayerID].Damage;
                 
                 MoveCursor(0, 25);
                 std::cout << "                                                                 ";
 
                 MoveCursor(0, 25);
-                std::cout << "Hai usato " << MossaScelta.Name << "! inflitti: " << MossaScelta.Danno;
+				std::cout << "Hai usato " << MossaScelta.Name << "! inflitti: " << MossaScelta.Danno + Entity.attacco[PlayerID].Damage;
                 Sleep(1500);
 				MoveCursor(0,25);
 				std::cout << "                                                  ";
@@ -283,10 +305,12 @@ SetConsoleOutputCP(CP_UTF8);
 					Entity.posizione.erase(EnemyID);
 					Entity.RespawnTImer[EnemyID].timer = 250;
 
-					Entity.livello[EnemyID].Exp;
-                    system("cls");
+					Entity.livello[PlayerID].Exp += Entity.livello[EnemyID].Exp;
+					LevelUp(Entity,PlayerID);
+					system("cls");
                     MoveCursor(0, 1);
-                    std::cout << "HAI VINTO!";
+					std::cout << "HAI VINTO!" << std::endl;
+					std::cout << "hai guadagnato: " << Entity.livello[EnemyID].Exp << " EXP";
                     Sleep(1500);
                     
                     clean = false;
@@ -309,14 +333,50 @@ SetConsoleOutputCP(CP_UTF8);
     }
 }
 
+void RangeSystem(EntityManager& Entity,EntityID PlayerID, EntityID EnemyID){
 
-void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID) {
+	int PosPlayerX = Entity.posizione[PlayerID].X;
+	int PosPlayerY = Entity.posizione[PlayerID].Y;
+
+	int PosEnemyX = Entity.posizione[EnemyID].X;
+	int PosEnemyY = Entity.posizione[EnemyID].Y;
+	
+	int DistX = std::abs(PosPlayerX - PosEnemyX);
+	int DistY = std::abs(PosPlayerY - PosEnemyY);
+
+	if(DistX <= Entity.entityrange[EnemyID].AttackRangeX && DistY <= Entity.entityrange[EnemyID].AttackRangeY){
+	
+		if(PosEnemyX < PosPlayerX ){
+			Entity.posizione[EnemyID].X++;
+		}else if(PosEnemyX > PosPlayerX){
+			Entity.posizione[EnemyID].X--;
+		}
+		if(PosEnemyY < PosPlayerY){
+			Entity.posizione[EnemyID].Y++;
+		}else if(PosEnemyY > PosPlayerY){
+			Entity.posizione[EnemyID].Y--;
+		}
+	
+	}
+
+}
+
+
+
+
+
+
+void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vector<EntityID>& EntityList) {
     HideCursor();
 	StartMenu Menu;
+	StatsGUI Stats;
     bool InExecution = true;
     bool clean = false;
     int GameState = 0;
     EntityID CurrentEnemyID = -1;
+	int LastTick = GetTickCount();
+
+
 
     while (InExecution) {
         if (GameState == 0) {
@@ -330,9 +390,38 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID) {
 			MoveCursor(0,24);
 			std::cout << "exp:" << Entity.livello[ID].Exp << " su " << "[" << Entity.livello[ID].MaxExp << "] MaxExp";
 			
-            
+
+			int ora = GetTickCount();
+
+				if(ora - LastTick >= 400){
+					for(size_t i = 0;i < EntityList.size(); i++){
+					EntityID EnemyID = EntityList[i];
+					RangeSystem(Entity,ID,EnemyID);
+					}
+					LastTick = ora;
+				}
+
+
+					EntityID hitEnemy = CollisionDetection(Entity, ID);
+                    if (hitEnemy != -1) {
+                        GameState = 1;
+                        CurrentEnemyID = hitEnemy;
+                    }
+
             if (_kbhit()) {
                 char Tasto = _getch();
+				
+							
+				Stats.Input(Entity,ID);
+				if(Tasto == 109){
+					system("cls");
+					Stats.SetisOpen(true);
+				while(Stats.GetisOpen()){
+					Stats.StatsGraphic(Entity,ID);
+					Stats.Input(Entity,ID);					
+					}
+				}
+
                 if (Tasto == 27) {
 					system("cls");
 					Menu.SetAttivo(true);
@@ -345,11 +434,6 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID) {
                 }else {
                     MuoviEntita(m, Entity, ID, Tasto);
 
-                    EntityID hitEnemy = CollisionDetection(Entity, ID);
-                    if (hitEnemy != -1) {
-                        GameState = 1;
-                        CurrentEnemyID = hitEnemy;
-                    }
 				}
 			}
 			MapRedering(m, Entity, ID);
@@ -371,8 +455,11 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID) {
        }
     }
 
+/* da fare;
+aggiungere un controllo nel RangeSystem per le collisioni contro un muro etc etc.
+aggiungere un checkpoint
+migliorare il menu quindi anziche di bloccarsi continua a scorrere
+aggiungere 3 eroi che si possono scegliere prima di iniziare
+aggiungere anche quante ore hai giocato
 
-/*
-	#aggiungere stats
-
-	*/
+*/

@@ -18,6 +18,7 @@ struct Livello{
 	int Exp;
 	int level;
 	int MaxExp;
+	int PointStats;
 };
 struct Visuale{char Simbolo;};
 struct ATB{int BarTime, Time;};
@@ -28,6 +29,8 @@ struct EntityRespawn{
 	int ReY;
 	int timer;
 };
+
+struct EntityRange{int AttackRangeX, AttackRangeY;};
 
 
 

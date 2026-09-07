@@ -8,7 +8,7 @@
 
 void MuoviEntita(Map& m,EntityManager& Entity,EntityID& ID,char Tasto);
 void MapRedering(Map& m, EntityManager& Entity,EntityID& ID);
-void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID);
+void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vector<EntityID>& EntityList);
 int CollisionDetection(EntityManager& Entity, EntityID& ID);
 void CombatSystem(EntityManager& Entity, EntityID& Enemy);
 void MoveCursor(int x,int y);

@@ -23,7 +23,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	 Entity.posizione[1].X = 2;
 	 Entity.posizione[1].Y = 2;
 	 Entity.visuale[1].Simbolo = '@';
-	 Entity.attacco[1].Damage = 0;
+	 Entity.attacco[1].Damage = 15;
 	 Entity.salute[1].HP = 10;
 	 Entity.salute[1].MaxHP = 10;
 	 Entity.atb[1].Time = 2;
@@ -47,8 +47,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	 Entity.RespawnTImer[2].ReY = 18;
 	 Entity.RespawnTImer[2].timer = 10;
 	 Entity.livello[2].Exp = 3;
-	 Entity.entityrange[2].AttackRangeX = 4;
-	 Entity.entityrange[2].AttackRangeY = 4;
+	 Entity.entityrange[2].AttackRangeX = 5;
+	 Entity.entityrange[2].AttackRangeY = 5;
 
 	 EntityID OrcoID = 3;
 	 Entity.posizione[3].X = 5;
@@ -63,6 +63,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	 Entity.RespawnTImer[3].ReY = 5;
 	 Entity.RespawnTImer[3].timer = 10;
 	 Entity.livello[3].Exp = 20;
+	 Entity.entityrange[3].AttackRangeX = 5;
+	 Entity.entityrange[3].AttackRangeY = 5;
 
 
 	 Entity.AddSkill(PlayerID,"Pugno",2);

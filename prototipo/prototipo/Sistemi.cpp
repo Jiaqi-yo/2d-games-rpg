@@ -139,16 +139,23 @@ int CollisionDetection(EntityManager& Entity, EntityID& ID){
 void ResetGame(Map& m, EntityManager& Entity, EntityID& PlayerID, int& GameState,bool& clean) {
 
 	Entity.salute[PlayerID].HP = Entity.salute[PlayerID].MaxHP;
-
     Entity.posizione[PlayerID].X = 1; 
     Entity.posizione[PlayerID].Y = 1;
 
-	for(auto IT = Entity.posizione.begin(); IT != Entity.posizione.end(); ++IT){
-	EntityID id = IT->first;
+	for(auto IT = Entity.salute.begin(); IT != Entity.salute.end(); ++IT){
+	EntityID ID = IT->first;
+	if(IT->first == PlayerID) continue;
 	
-	if(id == PlayerID) continue;
-	Entity.salute[id].HP = Entity.salute[id].MaxHP;
+	IT->second.HP = IT->second.MaxHP;
+	
+	if(Entity.RespawnTImer.count(ID) > 0){
+		Entity.RespawnTImer[ID].timer = 0;
+		
+		Entity.posizione[ID].X = Entity.RespawnTImer[ID].ReX;
+		Entity.posizione[ID].Y = Entity.RespawnTImer[ID].ReY;
+		}
 	}
+
 
 	clean = false;
     GameState = 0;
@@ -333,7 +340,7 @@ SetConsoleOutputCP(CP_UTF8);
     }
 }
 
-void RangeSystem(EntityManager& Entity,EntityID PlayerID, EntityID EnemyID){
+void RangeSystem(EntityManager& Entity,EntityID PlayerID, EntityID EnemyID,Map& m){
 
 	int PosPlayerX = Entity.posizione[PlayerID].X;
 	int PosPlayerY = Entity.posizione[PlayerID].Y;
@@ -346,25 +353,74 @@ void RangeSystem(EntityManager& Entity,EntityID PlayerID, EntityID EnemyID){
 
 	if(DistX <= Entity.entityrange[EnemyID].AttackRangeX && DistY <= Entity.entityrange[EnemyID].AttackRangeY){
 	
-		if(PosEnemyX < PosPlayerX ){
-			Entity.posizione[EnemyID].X++;
-		}else if(PosEnemyX > PosPlayerX){
-			Entity.posizione[EnemyID].X--;
-		}
-		if(PosEnemyY < PosPlayerY){
-			Entity.posizione[EnemyID].Y++;
-		}else if(PosEnemyY > PosPlayerY){
-			Entity.posizione[EnemyID].Y--;
-		}
-	
-	}
+		int StepX = (PosPlayerX > PosEnemyX) - (PosPlayerX < PosEnemyX);
+		int StepY = (PosPlayerY > PosEnemyY) - (PosPlayerY < PosEnemyY);
 
+		int TargetX = PosEnemyX + StepX;
+		int TargetY = PosEnemyY + StepY;
+
+		const int MapWidth = 20;
+		const int MapHeight = 20;
+
+		//per diagonale
+		bool IsWalkable = true;
+		if(TargetX < 0 || TargetX >= MapWidth || TargetY < 0 || TargetY >= MapHeight ||m.GetCella(TargetY,TargetX) == 1){
+		IsWalkable = false;
+		}else{
+			for(auto IT = Entity.posizione.begin(); IT != Entity.posizione.end();IT++){
+				if(IT->first == EnemyID || IT->first == PlayerID) continue;
+				if(IT->second.X == TargetX && IT->second.Y == TargetY){
+						IsWalkable = false;
+						break;
+					}
+				}
+			}
+		if(IsWalkable){
+			Entity.posizione[EnemyID].X = TargetX;
+			Entity.posizione[EnemyID].Y = TargetY;
+		}
+		//per destra e sinistra
+		else{
+		bool IsWalkableX =(StepX != 0);
+		if(IsWalkableX){
+			if(TargetX < 0 || TargetX >= MapWidth || m.GetCella(PosEnemyY,TargetX) == 1){
+				IsWalkableX = false;
+				}else{
+					for(auto IT = Entity.posizione.begin();IT != Entity.posizione.end();IT++){
+						if(IT->first == EnemyID || IT->first == PlayerID) continue;
+						if(IT->second.X == TargetX && IT->second.Y == PosEnemyY){
+							IsWalkableX = false;
+							break;
+						}
+					}
+				}	
+			}
+			if (IsWalkableX) {
+                Entity.posizione[EnemyID].X = TargetX;
+            } 
+			//per sopra e sotto
+            else {
+                bool IsWalkableY = (StepY != 0);
+                if (IsWalkableY) {
+                    if (TargetY < 0 || TargetY >= MapHeight || m.GetCella(TargetY, PosEnemyX) == 1) {
+                        IsWalkableY = false;
+                    } else {
+                        for (auto IT = Entity.posizione.begin(); IT != Entity.posizione.end(); IT++) {
+                            if (IT->first == EnemyID || IT->first == PlayerID) continue;
+                            if (IT->second.X == PosEnemyX && IT->second.Y == TargetY) {
+                                IsWalkableY = false;
+                                break;
+                            }
+                        }
+                    }
+                }       
+                if (IsWalkableY) {
+                    Entity.posizione[EnemyID].Y = TargetY;
+                }
+            } 
+        }    
+    }     
 }
-
-
-
-
-
 
 void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vector<EntityID>& EntityList) {
     HideCursor();
@@ -396,7 +452,7 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vect
 				if(ora - LastTick >= 400){
 					for(size_t i = 0;i < EntityList.size(); i++){
 					EntityID EnemyID = EntityList[i];
-					RangeSystem(Entity,ID,EnemyID);
+					RangeSystem(Entity,ID,EnemyID,m);
 					}
 					LastTick = ora;
 				}
@@ -456,9 +512,7 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vect
     }
 
 /* da fare;
-aggiungere un controllo nel RangeSystem per le collisioni contro un muro etc etc.
 aggiungere un checkpoint
-migliorare il menu quindi anziche di bloccarsi continua a scorrere
 aggiungere 3 eroi che si possono scegliere prima di iniziare
 aggiungere anche quante ore hai giocato
 

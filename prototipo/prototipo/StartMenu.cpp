@@ -12,26 +12,24 @@ StartMenu::StartMenu(){
  OpzioneLose = 1;
  Attivo = true;
 }
-
 void StartMenu::Input(){
 	char Tasto = _getch();
 	char TastoMinuscolo = tolower(Tasto);
-	if(TastoMinuscolo > 0 || TastoMinuscolo < 2){
+	
 	if(TastoMinuscolo == 'w'){
 	OpzioneSelezionata++;
-	}
+}
 	if(TastoMinuscolo == 's'){
 	OpzioneSelezionata--;
 	}
-}
-	if(OpzioneSelezionata < 0){
-	OpzioneSelezionata = 0;
-	}else if(OpzioneSelezionata > 2){
-	OpzioneSelezionata = 2;
 
+	if(OpzioneSelezionata < 0){
+	OpzioneSelezionata = 2;
+	}else if(OpzioneSelezionata > 2){
+	OpzioneSelezionata = 0;
 	}
-		 
-	else if(Tasto == 13){
+	
+	if(Tasto == 13){
 		if(OpzioneSelezionata == 0){
 		exit(0);
 		}else if(OpzioneSelezionata == 1){
@@ -43,7 +41,6 @@ void StartMenu::Input(){
 		}else if(OpzioneSelezionata == 2){
 		Attivo = false;
 		}
-
 	}
 }
 

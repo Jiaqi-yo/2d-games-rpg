@@ -103,7 +103,9 @@ void MapRedering(Map& m,EntityManager& Entity,EntityID& ID){
 			if(!EntityFound){
 				if(WorldX >= 0 && WorldX < MapWidth && WorldY >= 0 && WorldY < MapHeight){
 					int Cella = m.GetCella(WorldY,WorldX);
-					if(Cella == 1){
+					if(Cella == 2){
+/* --> vedere  */		std::cout << 'C';
+					}else if(Cella == 1){
 						std::cout << '#';
 					}else if (Cella == 0){
 						std::cout << '.';
@@ -136,11 +138,11 @@ int CollisionDetection(EntityManager& Entity, EntityID& ID){
 	}
 	return -1;
 }
-void ResetGame(Map& m, EntityManager& Entity, EntityID& PlayerID, int& GameState,bool& clean) {
+void ResetGame(Map& m, EntityManager& Entity, EntityID& PlayerID, int& GameState,bool& clean,int& SaveX,int& SaveY,bool& Saved) {
 
 	Entity.salute[PlayerID].HP = Entity.salute[PlayerID].MaxHP;
-    Entity.posizione[PlayerID].X = 1; 
-    Entity.posizione[PlayerID].Y = 1;
+    Entity.posizione[PlayerID].X = SaveX; 
+    Entity.posizione[PlayerID].Y = SaveY;
 
 	for(auto IT = Entity.salute.begin(); IT != Entity.salute.end(); ++IT){
 	EntityID ID = IT->first;
@@ -421,6 +423,17 @@ void RangeSystem(EntityManager& Entity,EntityID PlayerID, EntityID EnemyID,Map& 
         }    
     }     
 }
+void CheckPoint(EntityManager& Entity, EntityID& PlayerID,int& GameState,int& SaveX,int& SaveY,bool& Saved){
+	if(!Saved && GameState != 1){
+		MoveCursor(0,25);
+		std::cout << "hai fatto checkpoint";
+		Sleep(1000);
+		std::cout << "                            ";
+		SaveX = Entity.posizione[PlayerID].X;
+		SaveY = Entity.posizione[PlayerID].Y;
+		Saved = true;
+	}
+}
 
 void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vector<EntityID>& EntityList) {
     HideCursor();
@@ -429,6 +442,9 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vect
     bool InExecution = true;
     bool clean = false;
     int GameState = 0;
+	int SaveX = 0;
+	int SaveY = 0;
+	bool Saved = false;
     EntityID CurrentEnemyID = -1;
 	int LastTick = GetTickCount();
 
@@ -448,7 +464,6 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vect
 			
 
 			int ora = GetTickCount();
-
 				if(ora - LastTick >= 400){
 					for(size_t i = 0;i < EntityList.size(); i++){
 					EntityID EnemyID = EntityList[i];
@@ -456,7 +471,9 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vect
 					}
 					LastTick = ora;
 				}
-
+				if(m.GetCella(Entity.posizione[ID].Y,Entity.posizione[ID].X) == 2){
+					CheckPoint(Entity,ID,GameState,SaveX,SaveY,Saved);
+				}
 
 					EntityID hitEnemy = CollisionDetection(Entity, ID);
                     if (hitEnemy != -1) {
@@ -493,7 +510,7 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vect
 				}
 			}
 			MapRedering(m, Entity, ID);
-            
+
         } else if (GameState == 1) {
             CombatSystem(Entity, ID, CurrentEnemyID, clean, GameState);
         }
@@ -501,7 +518,7 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vect
 			Menu.MenuLose();
 			int Scelta = Menu.InputLose();
 			if(Scelta == 1){
-			ResetGame(m,Entity,ID,GameState, clean);
+			ResetGame(m,Entity,ID,GameState, clean,SaveX,SaveY,Saved);
 			}
 			if(Scelta == 0){
 			exit(0);
@@ -512,8 +529,6 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vect
     }
 
 /* da fare;
-aggiungere un checkpoint
 aggiungere 3 eroi che si possono scegliere prima di iniziare
 aggiungere anche quante ore hai giocato
-
 */

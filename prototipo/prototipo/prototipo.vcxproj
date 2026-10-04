@@ -79,6 +79,7 @@
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Sistemi.h" />
+    <ClInclude Include="SlotManager.h" />
     <ClInclude Include="StartMenu.h" />
     <ClInclude Include="StatsGUI.h" />
     <ClInclude Include="stdafx.h" />
@@ -88,6 +89,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="prototipo.cpp" />
     <ClCompile Include="Sistemi.cpp" />
+    <ClCompile Include="SlotManager.cpp" />
     <ClCompile Include="StartMenu.cpp" />
     <ClCompile Include="StatsGUI.cpp" />
     <ClCompile Include="stdafx.cpp">

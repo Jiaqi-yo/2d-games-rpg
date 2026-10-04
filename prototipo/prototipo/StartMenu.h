@@ -4,6 +4,7 @@
 class StartMenu{
 
 private:
+	int getOption;
 	int OpzioneSelezionata;
 	int OpzioneLose;
 	bool Attivo;

@@ -10,6 +10,7 @@
 #include <iostream>
 #include <string>
 #include <conio.h>
+#include "SlotManager.h"
 
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -31,6 +32,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	 Entity.livello[1].level = 0;
 	 Entity.livello[1].MaxExp = 10;
 	 Entity.livello[1].PointStats = 0;
+
+	 Entity.AddSkill(PlayerID,"Pugno",2);
+	 Entity.AddSkill(PlayerID, "Pugno pesante",3);
 
 
 
@@ -67,19 +71,33 @@ int _tmain(int argc, _TCHAR* argv[])
 	 Entity.entityrange[3].AttackRangeY = 5;
 
 
-	 Entity.AddSkill(PlayerID,"Pugno",2);
-	 Entity.AddSkill(PlayerID, "Pugno pesante",3);
+
 
 	 Map MioMappa;
 	 StartMenu Menu;
+	 SlotManager Slot;
+
 
 		 while(Menu.GetAttivo()){
 			 Menu.MenuGraphic();
-			 Menu.Input();	 	 
-			 if(Menu.GetChoice() == 2 && Menu.GetAttivo() == false){
+			 Menu.Input();	 
+			
+			 if(Menu.GetChoice() == 2){
 				system("cls");
-			 GameInExecution(MioMappa,Entity,PlayerID,EnemyID);
-	}
+				Slot.SetActive(true);
+				Menu.SetAttivo(false);			
+			}
+			 while(Slot.GetActive()){
+				 Slot.SlotMenu();
+				 Slot.SlotInput(Entity,PlayerID);	
+				 if(Slot.GetChoice() >= 1 && Slot.GetChoice() <= 3){
+					 Slot.SetActive(false);
+					 system("cls");
+					 Sleep(1000);
+					 GameInExecution(MioMappa,Entity,PlayerID,EnemyID);
+					}
+				}	
+	
 }
 	return 0;
 }

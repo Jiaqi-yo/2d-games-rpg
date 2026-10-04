@@ -6,6 +6,9 @@
 #include "StatsGUI.h"
 #include "cstdlib"
 #include "Windows.h"
+#include "SlotManager.h"
+#include "SlotManager.h"
+
 
 const char* BLOCCO_PIENO = "\xE2\x96\x88";
 
@@ -424,6 +427,8 @@ void RangeSystem(EntityManager& Entity,EntityID PlayerID, EntityID EnemyID,Map& 
     }     
 }
 void CheckPoint(EntityManager& Entity, EntityID& PlayerID,int& GameState,int& SaveX,int& SaveY,bool& Saved){
+	SlotManager Slot;
+
 	if(!Saved && GameState != 1){
 		MoveCursor(0,25);
 		std::cout << "hai fatto checkpoint";
@@ -431,6 +436,7 @@ void CheckPoint(EntityManager& Entity, EntityID& PlayerID,int& GameState,int& Sa
 		std::cout << "                            ";
 		SaveX = Entity.posizione[PlayerID].X;
 		SaveY = Entity.posizione[PlayerID].Y;
+		Slot.SaveData(Entity,PlayerID);
 		Saved = true;
 	}
 }
@@ -442,12 +448,12 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vect
     bool InExecution = true;
     bool clean = false;
     int GameState = 0;
-	int SaveX = 0;
-	int SaveY = 0;
+	int SaveX = Entity.posizione[ID].X;
+	int SaveY = Entity.posizione[ID].Y;
 	bool Saved = false;
     EntityID CurrentEnemyID = -1;
 	int LastTick = GetTickCount();
-
+	int lastSave = GetTickCount();
 
 
     while (InExecution) {
@@ -462,6 +468,10 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vect
 			MoveCursor(0,24);
 			std::cout << "exp:" << Entity.livello[ID].Exp << " su " << "[" << Entity.livello[ID].MaxExp << "] MaxExp";
 			
+			int isSavedLoadingNow = GetTickCount();
+			if(lastSave - isSavedLoadingNow >= 1000 ){
+			Saved = false;
+			}
 
 			int ora = GetTickCount();
 				if(ora - LastTick >= 400){
@@ -498,9 +508,10 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vect
                 if (Tasto == 27) {
 					system("cls");
 					Menu.SetAttivo(true);
-                    while (Menu.GetAttivo()) {
-                        Menu.MenuGraphic();
-                        Menu.Input();
+				    while (Menu.GetAttivo()) {
+					Menu.MenuGraphic();
+                    Menu.Input();
+					
 					 }
 					system("cls");
 				
@@ -527,8 +538,3 @@ void GameInExecution(Map& m, EntityManager& Entity, EntityID& ID,const std::vect
         Sleep(20);
        }
     }
-
-/* da fare;
-aggiungere 3 eroi che si possono scegliere prima di iniziare
-aggiungere anche quante ore hai giocato
-*/

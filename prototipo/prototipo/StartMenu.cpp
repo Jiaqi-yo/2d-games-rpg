@@ -1,4 +1,4 @@
- #include "stdafx.h"
+	 #include "stdafx.h"
 #include "StartMenu.h"
 #include <iostream>
 #include <conio.h>
@@ -8,6 +8,7 @@
 
 
 StartMenu::StartMenu(){
+ getOption = 0;
  OpzioneSelezionata = 1;
  OpzioneLose = 1;
  Attivo = true;
@@ -18,12 +19,12 @@ void StartMenu::Input(){
 	
 	if(TastoMinuscolo == 'w'){
 	OpzioneSelezionata++;
-}
+	}
 	if(TastoMinuscolo == 's'){
 	OpzioneSelezionata--;
 	}
 
-	if(OpzioneSelezionata < 0){
+	if(OpzioneSelezionata < 0 ){
 	OpzioneSelezionata = 2;
 	}else if(OpzioneSelezionata > 2){
 	OpzioneSelezionata = 0;
@@ -31,14 +32,17 @@ void StartMenu::Input(){
 	
 	if(Tasto == 13){
 		if(OpzioneSelezionata == 0){
+		getOption = 0;
 		exit(0);
 		}else if(OpzioneSelezionata == 1){
+		getOption = 1;
 		system("cls");
 		Credits();
 		std::cout << "clicca qualsiasi tasto per continuare" << std::endl;
 		_getch();
 		system("cls");
 		}else if(OpzioneSelezionata == 2){
+		getOption = 2;
 		Attivo = false;
 		}
 	}
@@ -64,8 +68,6 @@ void StartMenu::MenuGraphic(){
 	MoveCursor(28, 5);
 	std::cout << "/_/   \\_\\____/ \\____|___|___|_|  |_|  |_|    |_| |_| |_|\\___/|____/ ";
 
-
-		
 
 	if(OpzioneSelezionata == 2){
 	SetConsoleTextAttribute(hConsole,12);	
@@ -141,7 +143,7 @@ void StartMenu::MenuLose(){
 }
 
 int StartMenu::GetChoice(){
-return OpzioneSelezionata;
+return getOption;
 }
 
 void StartMenu::SetAttivo(bool a){

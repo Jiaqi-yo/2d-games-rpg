@@ -1,28 +1,30 @@
-#include "stdafx.h"
 #ifndef STARTMENU_H
 #define STARTMENU_H
-class StartMenu{
 
+class StartMenu
+{
 private:
-	int getOption;
-	int OpzioneSelezionata;
-	int OpzioneLose;
-	bool Attivo;
+
+    int OpzioneSelezionata;
+    int OpzioneLose;
+    bool Attivo;
 
 public:
-	
-	StartMenu();
-	void Input();
-	void MenuGraphic();
-	void Credits();
 
-	int InputLose();
-	void MenuLose();
+    StartMenu();
 
-	int GetLose();
-	int GetChoice();
-	void SetAttivo(bool a);
-	bool GetAttivo();
+    void Input();
+    void MenuGraphic();
+    void Credits();
+
+    void InputLose();
+    void MenuLose();
+
+    int GetChoice();
+
+    void SetAttivo(bool a);
+
+    bool GetAttivo();
 };
 
 #endif

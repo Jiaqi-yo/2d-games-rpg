@@ -39,10 +39,10 @@
     <ClInclude Include="EntityManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StatsGUI.h">
+    <ClInclude Include="SlotManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SlotManager.h">
+    <ClInclude Include="StatsGUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,10 +62,10 @@
     <ClCompile Include="StartMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StatsGUI.cpp">
+    <ClCompile Include="SlotManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SlotManager.cpp">
+    <ClCompile Include="StatsGUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
